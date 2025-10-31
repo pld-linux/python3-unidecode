@@ -5,21 +5,20 @@
 %define		module	Unidecode
 Summary:	ASCII transliterations of Unicode text
 Summary(pl.UTF-8):	Transliteracje ASCII tekstu w Unicode
-Name:		python-unidecode
-# keep 1.2.x here for python2 support
-Version:	1.2.0
+Name:		python3-unidecode
+Version:	1.4.0
 Release:	1
-License:	GPL v1+ or Artistic
+License:	GPL v2+
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/unidecode/
 Source0:	https://files.pythonhosted.org/packages/source/U/Unidecode/%{module}-%{version}.tar.gz
-# Source0-md5:	32944d19e8b26efbf1e2baf83966dfc2
+# Source0-md5:	d3da666a6d0e2729039556e5f0026480
 URL:		https://pypi.org/project/Unidecode/
-BuildRequires:	python-modules >= 1:2.7
-BuildRequires:	python-setuptools
+BuildRequires:	python3-modules >= 1:3.7
+BuildRequires:	python3-setuptools
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
-Requires:	python-modules >= 1:2.7
+Requires:	python3-modules >= 1:3.7
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -48,28 +47,27 @@ Seana M. Burke.
 %setup -q -n %{module}-%{version}
 
 %build
-%py_build
+%py3_build
 
 %if %{with tests}
 LC_ALL=C.UTF-8 \
-%{__python} -m unittest discover -s tests
+%{__python3} -m unittest discover -s tests
 %endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%py_install
+%py3_install
 
-%py_postclean
-
-%{__mv} $RPM_BUILD_ROOT%{_bindir}/unidecode{,-2}
-
+%{__mv} $RPM_BUILD_ROOT%{_bindir}/unidecode{,-3}
+ln -s unidecode-3 $RPM_BUILD_ROOT%{_bindir}/unidecode
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
 %doc ChangeLog README.rst
-%attr(755,root,root) %{_bindir}/unidecode-2
-%{py_sitescriptdir}/unidecode
-%{py_sitescriptdir}/Unidecode-%{version}-py*.egg-info
+%attr(755,root,root) %{_bindir}/unidecode-3
+%{_bindir}/unidecode
+%{py3_sitescriptdir}/unidecode
+%{py3_sitescriptdir}/Unidecode-%{version}-py*.egg-info
